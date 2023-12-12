@@ -11,6 +11,29 @@ struct stats {
 	size_t copy_count = 0;
 };
 
+class ComparisonClass {
+private:
+	int _value;
+public:
+
+	ComparisonClass() : _value(0) {}
+
+	ComparisonClass(int value) : _value(value) {}
+
+	int get_value() const {
+		return this->_value;
+	}
+
+	bool operator > (const ComparisonClass& rhs) const {
+		return this->_value > rhs._value;
+	}
+
+	bool operator < (const ComparisonClass& rhs) const {
+		return this->_value < rhs._value;
+	}
+};
+
+
 template <typename T>
 void swaps(T& a, T& b) {
 	T temp = a;
@@ -75,6 +98,59 @@ stats& shakerSort(std::vector<T>& arr) {
 	} while (swapped);
 
 	return s;
+}
+
+template <typename T>
+stats& combSort(std::vector<T>& arr) {
+	stats s;
+	size_t n = arr.size();
+	size_t gap = n;
+	bool swapped = true;
+
+	while (gap > 1 || swapped) {
+		gap = (gap * 10) / 13;
+		if (gap < 1) gap = 1;
+
+		swapped = false;
+		for (size_t i = 0; i < n - gap; ++i) {
+			s.comparison_count++;
+			if (arr[i] > arr[i + gap]) {
+				swaps(arr[i], arr[i + gap]);
+				s.copy_count += 3;
+				swapped = true;
+			}
+		}
+	}
+
+	return s;
+}
+
+template <typename T>
+vector<T> RandomVec(size_t size) {
+	vector<T> vector(size);
+	srand(static_cast<unsigned int>(time(0)));
+	for (size_t i = 0; i < size; ++i) {
+		vector[i] = rand();
+	}
+	return vector;
+}
+
+template <typename T>
+vector<T> SortedVec(size_t size) {
+	vector<T> vector(size);
+	for (size_t i = 0; i < size; ++i) {
+		vector[i] = i;
+	}
+	return vector;
+}
+
+template <typename T>
+vector<T> ReverseSortedVec(size_t size) {
+	vector<T> vector(size);
+	for (size_t i = 0; i < size; ++i) {
+		vector[i] = size - i;
+	}
+	return vector;
 }
 
 
